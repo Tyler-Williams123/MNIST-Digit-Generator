@@ -23,27 +23,27 @@ def diffuse(x0, t):
     xt = torch.sqrt(alpha_bar[t]) * x0 + torch.sqrt(1 - alpha_bar[t].view(-1, 1, 1, 1)) * noise # takes original image and adds noise based on variance schedule and t.
     return xt
 
-transform = transforms.Compose([
-    transforms.ToTensor(),
-    transforms.Normalize(0, 1)
-])
+# transform = transforms.Compose([
+#     transforms.ToTensor(),
+#     transforms.Normalize(0, 1)
+# ])
 
-dataset = datasets.MNIST(root='./data', train=True, download=True, transform=transform)
+# dataset = datasets.MNIST(root='./data', train=True, download=True, transform=transform)
 
-loader = DataLoader(dataset, batch_size=batchSize, shuffle=True)
+# loader = DataLoader(dataset, batch_size=batchSize, shuffle=True)
 
-iterator = iter(loader)
+# iterator = iter(loader)
 
-images, labels = next(iterator)
+# images, labels = next(iterator)
 
-xt = diffuse(images, t=500)
+# xt = diffuse(images, t=500)
 
-plt.imshow(images[0].permute(1, 2, 0).squeeze(), cmap='gray')
-plt.title(f'Big {labels[0].item()} Energy')
-plt.axis('off')
-plt.show()
+# plt.imshow(images[0].permute(1, 2, 0).squeeze(), cmap='gray')
+# plt.title(f'Big {labels[0].item()} Energy')
+# plt.axis('off')
+# plt.show()
 
-plt.imshow(xt[0].permute(1, 2, 0).squeeze(), cmap='gray')
-plt.title(f'Big {labels[0].item()} Energy')
-plt.axis('off')
-plt.show()
+# plt.imshow(xt[0].permute(1, 2, 0).squeeze(), cmap='gray')
+# plt.title(f'Big {labels[0].item()} Energy')
+# plt.axis('off')
+# plt.show()
