@@ -21,7 +21,7 @@ def diffuse(x0, t):
 
     #uses view to rehape alpha_bar[t] to match the dimensions of x0 for broadcasting
     xt = torch.sqrt(alpha_bar[t]) * x0 + torch.sqrt(1 - alpha_bar[t].view(-1, 1, 1, 1)) * noise # takes original image and adds noise based on variance schedule and t.
-    return xt
+    return xt, noise
 
 # transform = transforms.Compose([
 #     transforms.ToTensor(),
