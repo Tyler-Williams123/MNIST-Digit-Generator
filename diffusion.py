@@ -16,6 +16,8 @@ def diffuse(x0, t):
     Args:
         x0 (torch.Tensor): The input image tensor of shape (batch_size, channels, height, width).
         t (int): The time step at which to diffuse the image.
+    Returns:
+        torch.Tensor: The diffused image tensor of the same shape as x0 and the noise added to the image.
     """
     noise = torch.randn_like(x0) # generate noise with the same shape as the input image
 
