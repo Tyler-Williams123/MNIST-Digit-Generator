@@ -22,7 +22,7 @@ def diffuse(x0, t):
     noise = torch.randn_like(x0) # generate noise with the same shape as the input image
 
     #uses view to rehape alpha_bar[t] to match the dimensions of x0 for broadcasting
-    xt = torch.sqrt(alpha_bar[t]) * x0 + torch.sqrt(1 - alpha_bar[t].view(-1, 1, 1, 1)) * noise # takes original image and adds noise based on variance schedule and t.
+    xt = torch.sqrt(alpha_bar[t].view(-1, 1, 1, 1)) * x0 + torch.sqrt(1 - alpha_bar[t].view(-1, 1, 1, 1)) * noise # takes original image and adds noise based on variance schedule and t.
     return xt, noise
 
 # transform = transforms.Compose([

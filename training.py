@@ -12,7 +12,7 @@ optim = torch.optim.Adam(params=model.parameters(), lr=0.001)
 
 transform = transforms.Compose([
     transforms.ToTensor(),
-    transforms.Normalize(0, 1)
+    transforms.Normalize((0.5,), (0.5,))
 ])
 
 dataset = datasets.MNIST(root='./data', train=True, download=True, transform=transform)
