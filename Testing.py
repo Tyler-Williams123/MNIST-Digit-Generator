@@ -9,7 +9,8 @@ generationModel.load_state_dict(torch.load("model.pth"))
 generationModel.eval().to("cuda")
 
 labels = torch.randint(0, 10, (1,))
-clean = sample_ddim(model=generationModel, labels=labels, steps=50, device="cuda")
+clean = sample_ddim(model=generationModel, labels=labels, steps=250, device="cuda")
+clean = (clean + 1) / 2 #transform from [-1, 1] to [0, 1] for visualization
 
 plt.imshow(clean[0].cpu().detach().numpy().squeeze(0), cmap='gray') #had to detach grad required tensor
 plt.title(f"Generated Image for Label: {labels.item()}")
