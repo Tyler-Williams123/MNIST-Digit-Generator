@@ -5,10 +5,13 @@ from torchvision import transforms, datasets
 from torch.utils.data import DataLoader
 from matplotlib import pyplot as plt
 
-batchSize = 64
+batchSize = 128
 lossFunction = torch.nn.MSELoss()
 model = NoisePredictor(maxTimeSteps=1000)
 optim = torch.optim.Adam(params=model.parameters(), lr=0.001)
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+model.to(device)
 
 transform = transforms.Compose([
     transforms.ToTensor(),
@@ -25,8 +28,10 @@ try:
         for batch in loader:
             batchNum += 1
             images, labels = batch
-            t = torch.randint(0, diffusion.time, (images.size(0),))  # Randomly select time steps for each image in the batch
-            xt, noise = diffusion.diffuse(images, t)  # Diffuse the images at the selected time steps
+            images = images.to(device)
+            labels = labels.to(device)
+            t = torch.randint(0, diffusion.time, (images.size(0),)).to(device)  # Randomly select time steps for each image in the batch
+            xt, noise = diffusion.diffuse(images, t, device)  # Diffuse the images at the selected time steps
 
             #forward pass
             predicted_noise = model(xt, t, labels)
