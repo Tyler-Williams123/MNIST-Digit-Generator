@@ -24,28 +24,3 @@ def diffuse(x0, t):
     #uses view to rehape alpha_bar[t] to match the dimensions of x0 for broadcasting
     xt = torch.sqrt(alpha_bar[t].view(-1, 1, 1, 1)) * x0 + torch.sqrt(1 - alpha_bar[t].view(-1, 1, 1, 1)) * noise # takes original image and adds noise based on variance schedule and t.
     return xt, noise
-
-# transform = transforms.Compose([
-#     transforms.ToTensor(),
-#     transforms.Normalize(0, 1)
-# ])
-
-# dataset = datasets.MNIST(root='./data', train=True, download=True, transform=transform)
-
-# loader = DataLoader(dataset, batch_size=batchSize, shuffle=True)
-
-# iterator = iter(loader)
-
-# images, labels = next(iterator)
-
-# xt = diffuse(images, t=500)
-
-# plt.imshow(images[0].permute(1, 2, 0).squeeze(), cmap='gray')
-# plt.title(f'Big {labels[0].item()} Energy')
-# plt.axis('off')
-# plt.show()
-
-# plt.imshow(xt[0].permute(1, 2, 0).squeeze(), cmap='gray')
-# plt.title(f'Big {labels[0].item()} Energy')
-# plt.axis('off')
-# plt.show()

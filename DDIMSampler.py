@@ -32,8 +32,6 @@ def sample_ddim(model, labels, steps=50, device="cpu"):
         # Estimate the original image
         predicted_x0 = (x - torch.sqrt(1 - alpha_bar_t) * predicted_noise) / torch.sqrt(alpha_bar_t)
 
-        predicted_x0 = predicted_x0.clamp(-1, 1)
-
         x = (torch.sqrt(alpha_next) * predicted_x0 + torch.sqrt(1 - alpha_next) * predicted_noise) #turns predicted_x0 and predicted_noise into the next image in the diffusion process
 
     return x.clamp(-1, 1)
