@@ -3,12 +3,14 @@ from torchvision import transforms, datasets
 from torch.utils.data import DataLoader
 from matplotlib import pyplot as plt
 
+device = "cuda" if torch.cuda.is_available() else "cpu"
+
 batchSize = 64
 
 time = 1000
-beta = torch.linspace(1e-4, 0.02, time) # beta controlls amount of noise added to the image at each time step(high beta = more noise)
+beta = torch.linspace(1e-4, 0.02, time).to(device) # beta controlls amount of noise added to the image at each time step(high beta = more noise)
 alpha = 1.0 - beta #alpha is percent of info remaining in the image at each time step
-alpha_bar = torch.cumprod(alpha, dim=0) # also known as variance schedule
+alpha_bar = torch.cumprod(alpha, dim=0).to(device) # also known as variance schedule
 
 def diffuse(x0, t, device="cpu"):
     """
@@ -20,6 +22,8 @@ def diffuse(x0, t, device="cpu"):
     Returns:
         torch.Tensor: The diffused image tensor of the same shape as x0 and the noise added to the image.
     """
+    x0 = x0.to(device)
+    t = t.to(device)
     noise = torch.randn_like(x0) # generate noise with the same shape as the input image
     noise = noise.to(device)
 
