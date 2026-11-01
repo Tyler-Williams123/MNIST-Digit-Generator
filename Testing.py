@@ -9,7 +9,7 @@ generationModel.load_state_dict(torch.load("model.pth"))
 generationModel.eval()
 
 labels = torch.randint(0, 10, (64,))
-clean = sample_ddim(model=generationModel, labels=labels)
+clean = sample_ddim(model=generationModel, labels=labels, steps=250)
 
 plt.imshow(clean[0].detach().numpy().squeeze(0), cmap='gray') #had to detach grad required tensor
 plt.axis('off')
