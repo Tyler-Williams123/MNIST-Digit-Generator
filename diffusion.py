@@ -10,16 +10,18 @@ beta = torch.linspace(1e-4, 0.02, time) # beta controlls amount of noise added t
 alpha = 1.0 - beta #alpha is percent of info remaining in the image at each time step
 alpha_bar = torch.cumprod(alpha, dim=0) # also known as variance schedule
 
-def diffuse(x0, t):
+def diffuse(x0, t, device="cpu"):
     """
     Diffuses the input image x0 at time step t by adding noise based on the variance schedule.
     Args:
         x0 (torch.Tensor): The input image tensor of shape (batch_size, channels, height, width).
         t (int): The time step at which to diffuse the image.
+        device (str): The device to perform the diffusion on ("cpu" or "cuda").
     Returns:
         torch.Tensor: The diffused image tensor of the same shape as x0 and the noise added to the image.
     """
     noise = torch.randn_like(x0) # generate noise with the same shape as the input image
+    noise = noise.to(device)
 
     #uses view to rehape alpha_bar[t] to match the dimensions of x0 for broadcasting
     xt = torch.sqrt(alpha_bar[t].view(-1, 1, 1, 1)) * x0 + torch.sqrt(1 - alpha_bar[t].view(-1, 1, 1, 1)) * noise # takes original image and adds noise based on variance schedule and t.
