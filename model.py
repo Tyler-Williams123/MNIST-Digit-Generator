@@ -8,7 +8,7 @@ class NoisePredictor(nn.Module):
         self.labelEmbedding = nn.Embedding(10, 128) # embedding for labels 0-9
         self.timeEmbedding = nn.Embedding(maxTimeSteps, 128) # embedding for time steps
 
-        self.nonlinear = nn.ReLU()
+        self.nonlinear = nn.SiLU()
 
         self.conv1 = nn.Conv2d(1, 128, kernel_size=3, stride=1, padding=1)
         self.conv2 = nn.Conv2d(128, 128, kernel_size=3, stride=1, padding=1)
