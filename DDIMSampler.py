@@ -3,7 +3,18 @@ import diffusion
 from model import NoisePredictor
 from matplotlib import pyplot as plt
 
+@torch.no_grad()
 def sample_ddim(model, labels, steps=50, device="cpu"):
+    """
+    Generates samples from the diffusion model using the DDIM sampling method.
+    Args:
+        model (torch.nn.Module): The trained diffusion model.
+        labels (torch.Tensor): The labels corresponding to the samples to be generated.
+        steps (int): The number of steps for the DDIM sampling process.
+        device (str): The device to perform the sampling on ("cpu" or "cuda").
+    Returns:
+        torch.Tensor: The generated samples of shape (batch_size, channels, height, width).
+    """
     model.eval()
 
     labels = labels.to(device)
