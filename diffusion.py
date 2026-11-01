@@ -12,7 +12,7 @@ beta = torch.linspace(1e-4, 0.02, time).to(device) # beta controlls amount of no
 alpha = 1.0 - beta #alpha is percent of info remaining in the image at each time step
 alpha_bar = torch.cumprod(alpha, dim=0).to(device) # also known as variance schedule
 
-def diffuse(x0, t, device="cpu"):
+def diffuse(x0, t, device=device):
     """
     Diffuses the input image x0 at time step t by adding noise based on the variance schedule.
     Args:
