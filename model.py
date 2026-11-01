@@ -22,12 +22,17 @@ class NoisePredictor(nn.Module):
         label_emb = label_emb.view(-1, 64, 1, 1) # reshape embeddings to match xs dimensions
         time_emb = time_emb.view(-1, 64, 1, 1) # reshape embeddings to match times dimensions
 
-        x = self.nonlinear(self.conv1(x)) # trnasforms shape to match context embeddings
+        conditional_emb = label_emb + time_emb
 
-        x = x + label_emb + time_emb # add embeddings to input image
+        x = self.nonlinear(self.conv1(x)) # trnasforms shape to match context embeddings
+        x = x + conditional_emb # add embeddings to input image
 
         x = self.nonlinear(self.conv2(x))
+        x = x + conditional_emb
+
         x = self.nonlinear(self.conv3(x))
+        x = x + conditional_emb
+
         x = self.conv4(x)
 
         return x
