@@ -11,7 +11,8 @@ generationModel.load_state_dict(torch.load("model.pth"))
 generationModel.eval().to(device)
 
 labels = torch.randint(0, 10, (1,))
-clean = sample_ddim(model=generationModel, labels=labels, steps=250, device=device)
+labels = torch.tensor((8,))
+clean = sample_ddim(model=generationModel, labels=labels, steps=20, device=device)
 clean = (clean + 1) / 2 #transform from [-1, 1] to [0, 1] for visualization
 
 plt.imshow(clean[0].cpu().detach().numpy().squeeze(0), cmap='gray') #had to detach grad required tensor
