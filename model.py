@@ -63,7 +63,7 @@ class NoisePredictor(nn.Module):
         self.up1 = upsample(128, 128)
         self.Res5 = ResidualBlock(256, 64)
         self.up2 = upsample(64, 64)
-        self.Res6 = ResidualBlock(128, 1)
+        self.Res6 = ResidualBlock(128, 1, group_norm_groups=1) #final layer has 1 channel so no need for group norm
 
     def forward(self, x, t, labels):
         label_emb = self.labelEmbedding(labels) # get label embeddings
@@ -72,14 +72,14 @@ class NoisePredictor(nn.Module):
         conditional_emb = torch.cat((label_emb, time_emb), dim=1)
 
         #encoding
-        x = x + self.emb_proj1(conditional_emb).view(x.shape[0], -1, 1, 1)
+        x = x + self.emb_proj1(conditional_emb)[:, :, None, None]
         x = self.Res1(x)
         x = self.nonlinear(x)
         skip1 = x
 
         x = self.maxPool(x) #downsample
 
-        x = x + self.emb_proj128(conditional_emb).view(x.shape[0], -1, 1, 1) #add conditional embedding
+        x = x + self.emb_proj64(conditional_emb)[:, :, None, None] #add conditional embedding
         x = self.Res2(x)
         x = self.nonlinear(x)
         skip2 = x
@@ -87,23 +87,23 @@ class NoisePredictor(nn.Module):
         x = self.maxPool(x)
 
         #bottleneck
-        x = x + self.emb_proj256(conditional_emb).view(x.shape[0], -1, 1, 1)
+        x = x + self.emb_proj128(conditional_emb)[:, :, None, None]
         x = self.Res3(x)
         x = self.nonlinear(x)
        
-        x = x + self.emb_proj256(conditional_emb).view(x.shape[0], -1, 1, 1)
+        x = x + self.emb_proj256(conditional_emb)[:, :, None, None]
         x = self.Res4(x)
         x = self.nonlinear(x)
 
         #upsampling
         x = self.up1(x)
-        x = x + self.emb_proj128(conditional_emb).view(x.shape[0], -1, 1, 1)
+        x = x + self.emb_proj128(conditional_emb)[:, :, None, None]
         x = torch.cat((x, skip2), dim=1) #skip connection
         x = self.Res5(x)
         x = self.nonlinear(x)
 
         x = self.up2(x)
-        x = x + self.emb_proj64(conditional_emb).view(x.shape[0], -1, 1, 1)
+        x = x + self.emb_proj64(conditional_emb)[:, :, None, None]
         x = torch.cat((x, skip1), dim=1)
         x = self.Res6(x)
 
